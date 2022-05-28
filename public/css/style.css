@@ -1,0 +1,10 @@
+body{
+    background-color: azure;
+}
+.logo{
+    width: 70px;
+    height: 60px;
+}
+.navbar{
+    margin-bottom:5vh;
+}
