@@ -3,6 +3,8 @@ const app = express();
 const bodyParser = require("body-parser");
 const connection = require("./Database/database");
 const modelPergunta = require("./Database/Pergunta");
+const modelResposta = require("./Database/Resposta");
+
 
 
 //CONNECTION BD
@@ -28,10 +30,12 @@ app.use(bodyParser.json());
 
 //ROTAS
 app.get("/",(req,res)=>{
-    modelPergunta.findAll({raw: true, order: [
-        ['id','DESC']
-    ]}).then((perguntas)=>{
-        console.log(perguntas);
+    modelPergunta.findAll({
+        raw: true, 
+        order:[
+            ['id','DESC']
+        ]
+    }).then((perguntas)=>{
         res.render("index",{
             perguntas: perguntas
         });
@@ -45,7 +49,7 @@ app.get("/perguntar",(req,res)=>{
 });
 
 
-app.post("/salvarperguntas",(req,res)=>{
+app.post("/salvarperguntas",(req,res)=>{ // RECEBENDO DO FRONT E CRIANDO LISTA NA TABELA PERGUNTAS
     let titulo = req.body.titulo;
     let descricao = req.body.descricao;
     
@@ -58,18 +62,45 @@ app.post("/salvarperguntas",(req,res)=>{
 });
 
 
-app.get("/pergunta/:id",(req,res) => {
+app.get("/pergunta/:id",(req,res) => { // EQUIVALENTE A ROTA "PERGUNTAR" // ENCONTRA E JOGA DE VOLTA PRO FRONT
     let id = req.params.id;
     modelPergunta.findOne({
         where: {id: id}
     }).then(pergunta => {
         if(pergunta != undefined){
-            res.render("pergunta");
+
+            modelResposta.findAll({
+                where: {perguntaId: id},
+                order: [
+                    ['id','DESC']
+                ]
+            }).then(respostas =>{
+                res.render("pergunta",{
+                    pergunta:pergunta,
+                    respostas:respostas
+                });
+            });
+            
         }
         else{
             res.redirect("/");
         }
     })
+    
+})
+
+app.post("/salvarresposta",(req,res) => {
+    let conteudo = req.body.conteudo; // RECEBENDO DO FRONT
+    let perguntaId = req.body.perguntaId; // RECEBENDO DO FRONT --> PARA CRIAR UM ITEM NA TABELA RESPOSTAS
+
+    modelResposta.create({
+        conteudo: conteudo,
+        perguntaId: perguntaId
+    }).then(()=>{
+        res.redirect("/pergunta/"+perguntaId);
+    })
+
+
 })
 
 

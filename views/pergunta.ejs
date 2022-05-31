@@ -1,1 +1,37 @@
-<h1>Pagina de perguntas</h1>
+<%-include('partials/header.ejs')%>
+
+<body>
+    <%-include('partials/navbar.ejs')%>
+    <div class="container">
+        <h1><%=pergunta.titulo%></h1>
+        <br>
+        <p><%=pergunta.descricao%></p>
+        <hr>
+        <br>
+        <h4>Respostas</h4>
+        <hr>
+        <%respostas.forEach(resposta =>{%>
+            <br>
+            <div class="card">
+                <div class="card-body">
+                    <p><%=resposta.conteudo%></p>
+                </div>
+            </div>
+        <%})%>
+        <hr>
+        <form action="/salvarresposta" method="POST">
+            <label>Responder: </label>
+            <textarea placeholder="Escreva sua resposta" class="form-control" name="conteudo"></textarea>
+            <br>
+            <input type="hidden" name="perguntaId" value="<%=pergunta.id%>">
+            <button type="submit" class="btn btn-primary">Enviar resposta</button>
+        </form>
+        <br>
+
+    </div>
+
+</body>
+
+
+
+<%-include('partials/footer.ejs')%>

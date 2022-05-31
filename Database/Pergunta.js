@@ -13,7 +13,7 @@ const Pergunta = connection.define('perguntas',{ // CIRANDO TABELA/MODEL "Pergun
 });
 
 Pergunta.sync({force: false}).then(()=>{
-    console.log("Model criado");
+    console.log("Model 'perguntas' criado");
 });
 
 module.exports = Pergunta;

@@ -8,3 +8,7 @@ body{
 .navbar{
     margin-bottom:5vh;
 }
+.navbar-brand img{
+    width: 140px;
+    height: 70px;
+}
